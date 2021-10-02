@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory app:title="@string/home_assistant_header">
+        <EditTextPreference
+            app:key="@string/home_assistant_url_key"
+            app:icon="@drawable/baseline_language_24dp"
+            app:title="@string/home_assistant_url_title"
+            />
+        <EditTextPreference
+            android:inputType="textPassword"
+            app:icon="@drawable/baseline_key_24dp"
+            app:key="@string/home_assistant_access_token_key"
+            app:title="@string/home_assistant_access_token_title" />
+    </PreferenceCategory>
+</PreferenceScreen>
