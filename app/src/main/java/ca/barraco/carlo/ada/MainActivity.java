@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
         private void sendConversationText(String voiceRecognitionResult) {
             try {
-                // TODO implement optional HTTPS cert validation
                 Request request = buildRequest(voiceRecognitionResult);
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Call call = okHttpClient.newCall(request);
