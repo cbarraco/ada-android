@@ -47,7 +47,7 @@
             android:parentActivityName=".MainActivity" />
 
         <service
-            android:name="ca.barraco.carlo.ada.assistant.AdaVoiceInteractionService"
+            android:name=".assistant.AdaVoiceInteractionService"
             android:exported="true"
             android:permission="android.permission.BIND_VOICE_INTERACTION">
             <meta-data
@@ -58,7 +58,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="ca.barraco.carlo.ada.assistant.AdaVoiceInteractionSessionService"
+            android:name=".assistant.AdaVoiceInteractionSessionService"
             android:permission="android.permission.BIND_VOICE_INTERACTION" />
     </application>
 

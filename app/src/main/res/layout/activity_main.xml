@@ -20,14 +20,50 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/statusView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/recognition_idle"
-        android:visibility="visible" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/statusView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_marginTop="18dp"
+            android:text="@string/recognition_idle"
+            android:textSize="24sp"
+            android:visibility="visible" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp">
+
+            <LinearLayout
+                android:id="@+id/chatLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:background="@color/HomeAssistant"
+                    android:gravity="start"
+                    android:padding="6dp"
+                    android:text="How can I help?"
+                    android:textColor="@color/White"
+                    android:textSize="18dp" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -36,8 +72,8 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
+        android:contentDescription="Activate microphone"
         android:tint="@color/White"
-        app:srcCompat="@drawable/baseline_mic_24dp"
-        android:contentDescription="Activate microphone" />
+        app:srcCompat="@drawable/baseline_mic_24dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
