@@ -1,9 +1,11 @@
 package ca.barraco.carlo.ada;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.util.TypedValue;
@@ -11,10 +13,12 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import ca.barraco.carlo.ada.databinding.ActivityMainBinding;
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView statusView;
     private boolean fromAssistantButton;
     private LinearLayout chatLayout;
+    private ScrollView chatScrollView;
+    private MyRecognitionListener myRecognitionListener;
+    private MainActivityBroadcastReceiver mainActivityBroadcastReceiver;
 
     public static void startRecognizing(Context context) {
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
@@ -85,9 +92,21 @@ public class MainActivity extends AppCompatActivity {
 
         chatLayout = findViewById(R.id.chatLayout);
 
+        chatScrollView = findViewById(R.id.chatScrollView);
+
         binding.fab.setOnClickListener(view -> startListening());
 
         setUpBroadcastReceiver();
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        localBroadcastManager.unregisterReceiver(mainActivityBroadcastReceiver);
     }
 
     private void setUpBroadcastReceiver() {
@@ -97,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        MainActivityBroadcastReceiver mainActivityBroadcastReceiver = new MainActivityBroadcastReceiver();
+        mainActivityBroadcastReceiver = new MainActivityBroadcastReceiver();
         localBroadcastManager.registerReceiver(mainActivityBroadcastReceiver, intentFilter);
     }
 
@@ -127,10 +146,18 @@ public class MainActivity extends AppCompatActivity {
     private void startListening() {
         // TODO move listening and processing logic to service
         Logger.information("starting speech recognition");
+
+        int selfPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        if (selfPermission == PackageManager.PERMISSION_DENIED) {
+            String[] permissions = new String[]{Manifest.permission.RECORD_AUDIO};
+            requestPermissions(permissions, 1);
+        }
+
         Context context = getApplicationContext();
         SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
         Intent recognizerIntent = new Intent();
-        speechRecognizer.setRecognitionListener(new MyRecognitionListener(this));
+        myRecognitionListener = new MyRecognitionListener(context);
+        speechRecognizer.setRecognitionListener(myRecognitionListener);
         speechRecognizer.startListening(recognizerIntent);
     }
 
@@ -201,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
             if (fromAssistantButton) {
                 finish();
             } else {
-                TextView textView = getTextView(message);
+                TextView textView = createTextView(message);
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 params.gravity = Gravity.END;
@@ -225,21 +252,23 @@ public class MainActivity extends AppCompatActivity {
             if (fromAssistantButton) {
                 finish();
             } else {
-                TextView textView = getTextView(message);
+                TextView textView = createTextView(message);
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 params.gravity = Gravity.START;
-                params.topMargin = spToPixels(chatLayout.getContext(), 6);
+                params.topMargin = spToPixels(textView.getContext(), 6);
                 textView.setLayoutParams(params);
                 textView.setBackgroundColor(getResources().getColor(R.color.HomeAssistant));
                 textView.setTextColor(getResources().getColor(R.color.White));
-
+                textView.setFocusable(true);
+                textView.setFocusableInTouchMode(true);
                 chatLayout.addView(textView);
+                textView.requestFocus();
             }
         }
 
         @NonNull
-        private TextView getTextView(String message) {
+        private TextView createTextView(String message) {
             TextView textView = new TextView(chatLayout.getContext());
             int padding = spToPixels(chatLayout.getContext(), 6);
             textView.setPadding(padding, padding, padding, padding);
