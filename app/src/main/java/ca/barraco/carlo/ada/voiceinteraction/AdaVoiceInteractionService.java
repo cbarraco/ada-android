@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.assistant;
+package ca.barraco.carlo.ada.voiceinteraction;
 
 import android.service.voice.VoiceInteractionService;
 

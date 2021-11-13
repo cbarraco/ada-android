@@ -7,8 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
+import android.os.PowerManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,15 +21,37 @@ import ca.barraco.carlo.ada.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
     private static final String[] Actions = {
-            ChatboxFragment.ACTION_SHOW_RECOGNITION_RESULT,
-            ChatboxFragment.ACTION_SHOW_REPLY,
-            ChatboxFragment.ACTION_SHOW_ERROR,
+            AdaActions.ACTION_SHOW_RECOGNITION_RESULT,
+            AdaActions.ACTION_SHOW_REPLY,
+            AdaActions.ACTION_SHOW_ERROR,
     };
     private boolean fromAssistantButton;
 
-    private MyRecognitionListener myRecognitionListener;
+    private AdaRecognitionListener adaRecognitionListener;
 
     private MainActivityBroadcastReceiver mainActivityBroadcastReceiver;
+    private PowerManager.WakeLock wakeLock_partial = null;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent == null) {
+            Logger.warning("Intent for MainActivity is null");
+            return;
+        }
+        String action = intent.getAction();
+        if (action == null) {
+            Logger.information("Action for MainActivity intent is null");
+            return;
+        }
+
+        if (action.equals("android.intent.action.VOICE_COMMAND")) {
+            Logger.information("Handling assistant button");
+            fromAssistantButton = true;
+            startListening();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startListening() {
-        // TODO move listening and processing logic to service
-        Logger.information("starting speech recognition");
+        Logger.information("Starting speech recognition");
 
         int selfPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         if (selfPermission == PackageManager.PERMISSION_DENIED) {
@@ -93,13 +113,9 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(permissions, 1);
         }
 
-        Context context = getApplicationContext();
-        SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
-        Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        myRecognitionListener = new MyRecognitionListener(context);
-        speechRecognizer.setRecognitionListener(myRecognitionListener);
-        speechRecognizer.startListening(recognizerIntent);
+        Intent serviceIntent = new Intent(getApplicationContext(), VoiceRecognitionService.class);
+        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+        ContextCompat.startForegroundService(this, serviceIntent);
     }
 
     @Override
@@ -133,11 +149,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Logger.debug("Handling %s", action);
-            if (action.equals(ChatboxFragment.ACTION_SHOW_RECOGNITION_RESULT)) {
+            if (action.equals(AdaActions.ACTION_SHOW_RECOGNITION_RESULT)) {
                 handleShowRecognitionResult();
-            } else if (action.equals(ChatboxFragment.ACTION_SHOW_REPLY)) {
+            } else if (action.equals(AdaActions.ACTION_SHOW_REPLY)) {
                 handleShowReply();
-            } else if (action.equals(ChatboxFragment.ACTION_SHOW_ERROR)) {
+            } else if (action.equals(AdaActions.ACTION_SHOW_ERROR)) {
                 handleShowError();
             }
         }
@@ -159,5 +175,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+
+
     }
 }

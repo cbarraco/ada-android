@@ -25,17 +25,17 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class MyRecognitionListener implements RecognitionListener {
+public class AdaRecognitionListener implements RecognitionListener {
 
     private final Context context;
 
-    public MyRecognitionListener(Context context) {
+    public AdaRecognitionListener(Context context) {
         this.context = context;
     }
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
-        ChatboxFragment.startListening(context);
+        AdaActions.startListening(context);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MyRecognitionListener implements RecognitionListener {
     @Override
     public void onError(int i) {
         Logger.warning("Error encountered during recognition");
-        ChatboxFragment.showError(context);
+        AdaActions.showError(context);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MyRecognitionListener implements RecognitionListener {
         ArrayList<String> recognitionResults = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String speechRecognitionResult = recognitionResults.get(0);
         sendConversationText(speechRecognitionResult);
-        ChatboxFragment.showRecognitionResult(context, speechRecognitionResult);
+        AdaActions.showRecognitionResult(context, speechRecognitionResult);
         Logger.information("Recognized speech: " + speechRecognitionResult);
     }
 
@@ -119,11 +119,10 @@ public class MyRecognitionListener implements RecognitionListener {
 
     @Override
     public void onPartialResults(Bundle bundle) {
-        Logger.debug("Got partial results");
         ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String word = data.get(data.size() - 1);
         if (!word.isEmpty()) {
-            ChatboxFragment.showPartialResult(context, word);
+            AdaActions.showPartialResult(context, word);
         }
     }
 
@@ -144,7 +143,7 @@ public class MyRecognitionListener implements RecognitionListener {
             String reply = parseResponse(response);
             Logger.debug("Got " + response.code() + " reply from Home Assistant: " + reply);
 
-            ChatboxFragment.showReply(context, reply);
+            AdaActions.showReply(context, reply);
         }
 
         @Nullable
