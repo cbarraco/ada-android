@@ -35,7 +35,7 @@ public class MyRecognitionListener implements RecognitionListener {
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
-        MainActivity.startListening(context);
+        ChatboxFragment.startListening(context);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MyRecognitionListener implements RecognitionListener {
     @Override
     public void onError(int i) {
         Logger.warning("Error encountered during recognition");
-        MainActivity.showError(context);
+        ChatboxFragment.showError(context);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MyRecognitionListener implements RecognitionListener {
         ArrayList<String> recognitionResults = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String speechRecognitionResult = recognitionResults.get(0);
         sendConversationText(speechRecognitionResult);
-        MainActivity.showRecognitionResult(context, speechRecognitionResult);
+        ChatboxFragment.showRecognitionResult(context, speechRecognitionResult);
         Logger.information("Recognized speech: " + speechRecognitionResult);
     }
 
@@ -123,7 +123,7 @@ public class MyRecognitionListener implements RecognitionListener {
         ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String word = data.get(data.size() - 1);
         if (!word.isEmpty()) {
-            MainActivity.showPartialResult(context, word);
+            ChatboxFragment.showPartialResult(context, word);
         }
     }
 
@@ -144,7 +144,7 @@ public class MyRecognitionListener implements RecognitionListener {
             String reply = parseResponse(response);
             Logger.debug("Got " + response.code() + " reply from Home Assistant: " + reply);
 
-            MainActivity.showReply(context, reply);
+            ChatboxFragment.showReply(context, reply);
         }
 
         @Nullable
