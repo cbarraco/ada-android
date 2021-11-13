@@ -2,7 +2,7 @@
     <string name="app_name">Ada</string>
     <string name="action_settings">Settings</string>
 
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
     <string name="home_assistant_header">Connection Information</string>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -25,41 +26,29 @@ import ca.barraco.carlo.ada.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ACTION_START_RECOGNIZING = "MainActivity.ACTION_START_RECOGNIZING";
     private static final String ACTION_START_LISTENING = "MainActivity.ACTION_START_LISTENING";
-    private static final String ACTION_STOP_LISTENING = "MainActivity.ACTION_STOP_LISTENING";
     private static final String ACTION_SHOW_RECOGNITION_RESULT = "MainActivity.ACTION_SHOW_RECOGNITION_RESULT";
     private static final String ACTION_SHOW_REPLY = "MainActivity.ACTION_SHOW_REPLY";
+    private static final String ACTION_SHOW_ERROR = "MainActivity.ACTION_SHOW_ERROR";
+    private static final String ACTION_SHOW_PARTIAL_RESULT = "MainActivity.ACTION_SHOW_PARTIAL_RESULT";
     private static final String EXTRA_MESSAGE = "MainActivity.EXTRA_MESSAGE";
     private static final String[] Actions = {
-            ACTION_START_RECOGNIZING,
             ACTION_START_LISTENING,
-            ACTION_STOP_LISTENING,
             ACTION_SHOW_RECOGNITION_RESULT,
-            ACTION_SHOW_REPLY
+            ACTION_SHOW_REPLY,
+            ACTION_SHOW_ERROR,
+            ACTION_SHOW_PARTIAL_RESULT
     };
-    private TextView statusView;
     private boolean fromAssistantButton;
     private LinearLayout chatLayout;
     private ScrollView chatScrollView;
     private MyRecognitionListener myRecognitionListener;
     private MainActivityBroadcastReceiver mainActivityBroadcastReceiver;
-
-    public static void startRecognizing(Context context) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent(ACTION_START_RECOGNIZING);
-        localBroadcastManager.sendBroadcast(intent);
-    }
+    private TextView currentRequestTextView;
 
     public static void startListening(Context context) {
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
         Intent intent = new Intent(ACTION_START_LISTENING);
-        localBroadcastManager.sendBroadcast(intent);
-    }
-
-    public static void stopListening(Context context) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent(ACTION_STOP_LISTENING);
         localBroadcastManager.sendBroadcast(intent);
     }
 
@@ -77,6 +66,19 @@ public class MainActivity extends AppCompatActivity {
         localBroadcastManager.sendBroadcast(intent);
     }
 
+    public static void showError(Context context) {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        Intent intent = new Intent(ACTION_SHOW_ERROR);
+        localBroadcastManager.sendBroadcast(intent);
+    }
+
+    public static void showPartialResult(Context context, String reply) {
+        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        Intent intent = new Intent(ACTION_SHOW_PARTIAL_RESULT);
+        intent.putExtra(EXTRA_MESSAGE, reply);
+        localBroadcastManager.sendBroadcast(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
 
         handleAssistantButton();
 
-        statusView = findViewById(R.id.statusView);
-
         chatLayout = findViewById(R.id.chatLayout);
 
         chatScrollView = findViewById(R.id.chatScrollView);
@@ -97,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(view -> startListening());
 
         setUpBroadcastReceiver();
-
-
     }
 
     @Override
@@ -156,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
         Intent recognizerIntent = new Intent();
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         myRecognitionListener = new MyRecognitionListener(context);
         speechRecognizer.setRecognitionListener(myRecognitionListener);
         speechRecognizer.startListening(recognizerIntent);
@@ -194,27 +193,28 @@ public class MainActivity extends AppCompatActivity {
             Logger.debug("Handling %s", action);
             if (action.equals(ACTION_START_LISTENING)) {
                 handleStartListening();
-            } else if (action.equals(ACTION_STOP_LISTENING)) {
-                handleStopListening();
-            } else if (action.equals(ACTION_START_RECOGNIZING)) {
-                handleStartRecognizing();
             } else if (action.equals(ACTION_SHOW_RECOGNITION_RESULT)) {
                 handleShowRecognitionResult(intent);
             } else if (action.equals(ACTION_SHOW_REPLY)) {
                 handleShowReply(intent);
+            } else if (action.equals(ACTION_SHOW_ERROR)) {
+                handleShowError();
+            } else if (action.equals(ACTION_SHOW_PARTIAL_RESULT)) {
+                handleShowPartialResult(intent);
             }
         }
 
         private void handleStartListening() {
-            statusView.setText(R.string.recognition_listening);
-        }
+            currentRequestTextView = createTextView("...");
 
-        private void handleStartRecognizing() {
-            statusView.setText(R.string.recognition_recognizing);
-        }
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.gravity = Gravity.END;
+            params.topMargin = spToPixels(chatLayout.getContext(), 6);
+            currentRequestTextView.setLayoutParams(params);
+            currentRequestTextView.setBackgroundColor(getResources().getColor(R.color.AdaRequest));
+            currentRequestTextView.setTextColor(getResources().getColor(R.color.Black));
 
-        private void handleStopListening() {
-            statusView.setText(R.string.recognition_idle);
+            chatLayout.addView(currentRequestTextView);
         }
 
         private void handleShowRecognitionResult(@NonNull Intent intent) {
@@ -228,16 +228,7 @@ public class MainActivity extends AppCompatActivity {
             if (fromAssistantButton) {
                 finish();
             } else {
-                TextView textView = createTextView(message);
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.gravity = Gravity.END;
-                params.topMargin = spToPixels(chatLayout.getContext(), 6);
-                textView.setLayoutParams(params);
-                textView.setBackgroundColor(getResources().getColor(R.color.AdaRequest));
-                textView.setTextColor(getResources().getColor(R.color.Black));
-
-                chatLayout.addView(textView);
+                currentRequestTextView.setText(message);
             }
         }
 
@@ -252,19 +243,40 @@ public class MainActivity extends AppCompatActivity {
             if (fromAssistantButton) {
                 finish();
             } else {
-                TextView textView = createTextView(message);
+                TextView replyTextView = createTextView(message);
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 params.gravity = Gravity.START;
-                params.topMargin = spToPixels(textView.getContext(), 6);
-                textView.setLayoutParams(params);
-                textView.setBackgroundColor(getResources().getColor(R.color.HomeAssistant));
-                textView.setTextColor(getResources().getColor(R.color.White));
-                textView.setFocusable(true);
-                textView.setFocusableInTouchMode(true);
-                chatLayout.addView(textView);
-                textView.requestFocus();
+                params.topMargin = spToPixels(replyTextView.getContext(), 6);
+                replyTextView.setLayoutParams(params);
+                replyTextView.setBackgroundColor(getResources().getColor(R.color.HomeAssistant));
+                replyTextView.setTextColor(getResources().getColor(R.color.White));
+                replyTextView.setFocusable(true);
+                replyTextView.setFocusableInTouchMode(true);
+                chatLayout.addView(replyTextView);
+                replyTextView.requestFocus();
             }
+        }
+
+        private void handleShowError() {
+            if (fromAssistantButton) {
+                finish();
+            } else {
+                currentRequestTextView.setText("<Home Assistant did not hear anything>");
+                currentRequestTextView.setBackgroundColor(getResources().getColor(R.color.RecognitionFailure));
+                currentRequestTextView.setTextColor(getResources().getColor(R.color.White));
+            }
+        }
+
+        private void handleShowPartialResult(Intent intent) {
+            String message = intent.getStringExtra(EXTRA_MESSAGE);
+            if (message == null) {
+                Logger.warning("Received null message");
+                return;
+            }
+
+            Logger.debug("Received partial results: %s", message);
+            currentRequestTextView.setText(message);
         }
 
         @NonNull

@@ -40,7 +40,7 @@ public class MyRecognitionListener implements RecognitionListener {
 
     @Override
     public void onBeginningOfSpeech() {
-        MainActivity.startRecognizing(context);
+        // not used
     }
 
     @Override
@@ -55,12 +55,13 @@ public class MyRecognitionListener implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
-        MainActivity.stopListening(context);
+        // not used
     }
 
     @Override
     public void onError(int i) {
-        // not used
+        Logger.warning("Error encountered during recognition");
+        MainActivity.showError(context);
     }
 
     @Override
@@ -119,6 +120,11 @@ public class MyRecognitionListener implements RecognitionListener {
     @Override
     public void onPartialResults(Bundle bundle) {
         Logger.debug("Got partial results");
+        ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        String word = data.get(data.size() - 1);
+        if (!word.isEmpty()) {
+            MainActivity.showPartialResult(context, word);
+        }
     }
 
     @Override
@@ -136,7 +142,8 @@ public class MyRecognitionListener implements RecognitionListener {
         @Override
         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
             String reply = parseResponse(response);
-            Logger.debug("Got reply from Home Assistant: " + reply);
+            Logger.debug("Got " + response.code() + " reply from Home Assistant: " + reply);
+
             MainActivity.showReply(context, reply);
         }
 
@@ -146,6 +153,7 @@ public class MyRecognitionListener implements RecognitionListener {
                 ResponseBody responseBody = response.body();
                 if (responseBody != null) {
                     String responseJsonBody = responseBody.string();
+                    Logger.debug(responseJsonBody);
                     JSONObject responseJsonObject = new JSONObject(responseJsonBody);
                     return responseJsonObject.getJSONObject("speech").getJSONObject("plain").getString("speech");
                 }
