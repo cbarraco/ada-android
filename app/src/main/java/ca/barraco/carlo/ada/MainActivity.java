@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     };
     private boolean fromAssistantButton;
     private LinearLayout chatLayout;
-    private ScrollView chatScrollView;
     private MyRecognitionListener myRecognitionListener;
     private MainActivityBroadcastReceiver mainActivityBroadcastReceiver;
     private TextView currentRequestTextView;
@@ -83,16 +81,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        if (intent == null) {
+            Logger.warning("Intent for MainActivity is null");
+            return;
+        }
+        String action = intent.getAction();
+        if (action == null) {
+            Logger.information("Action for MainActivity intent is null");
+            return;
+        }
+
+        if (action.equals("android.intent.action.VOICE_COMMAND")) {
+            setTheme(R.style.Theme_AppCompat_DayNight_Dialog);
+        }
+
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.toolbar);
 
         handleAssistantButton();
 
         chatLayout = findViewById(R.id.chatLayout);
-
-        chatScrollView = findViewById(R.id.chatScrollView);
 
         binding.fab.setOnClickListener(view -> startListening());
 
@@ -134,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
             if (action.equals("android.intent.action.VOICE_COMMAND")) {
                 Logger.information("Handling assistant button");
                 fromAssistantButton = true;
+                setTheme(R.style.Theme_AppCompat_DayNight_Dialog);
                 startListening();
             }
         } catch (Exception exception) {
@@ -153,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
         SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
-        Intent recognizerIntent = new Intent();
+        Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         myRecognitionListener = new MyRecognitionListener(context);
         speechRecognizer.setRecognitionListener(myRecognitionListener);

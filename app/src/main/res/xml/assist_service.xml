@@ -2,4 +2,4 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:recognitionService="ca.barraco.carlo.ada.AssistLoggerService"
     android:sessionService="ca.barraco.carlo.ada.AssistLoggerSessionService"
-    android:supportsAssist="true"/>
+    android:supportsAssist="true" />

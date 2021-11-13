@@ -17,21 +17,24 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ada">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Ada.NoActionBar">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VOICE_COMMAND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -49,10 +52,12 @@
         <service
             android:name=".assistant.AdaVoiceInteractionService"
             android:exported="true"
-            android:permission="android.permission.BIND_VOICE_INTERACTION">
+            android:permission="android.permission.BIND_VOICE_INTERACTION"
+            android:process=":interactor">
             <meta-data
                 android:name="android.voice_interaction"
                 android:resource="@xml/assist_service" />
+
             <intent-filter>
                 <action android:name="android.service.voice.VoiceInteractionService" />
             </intent-filter>
@@ -60,6 +65,7 @@
         <service
             android:name=".assistant.AdaVoiceInteractionSessionService"
             android:permission="android.permission.BIND_VOICE_INTERACTION" />
+
     </application>
 
 </manifest>
