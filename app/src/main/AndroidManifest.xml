@@ -50,22 +50,6 @@
             android:parentActivityName=".MainActivity" />
 
         <service
-            android:name=".voiceinteraction.AdaVoiceInteractionService"
-            android:exported="true"
-            android:permission="android.permission.BIND_VOICE_INTERACTION"
-            android:process=":interactor">
-            <meta-data
-                android:name="android.voice_interaction"
-                android:resource="@xml/assist_service" />
-
-            <intent-filter>
-                <action android:name="android.service.voice.VoiceInteractionService" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".voiceinteraction.AdaVoiceInteractionSessionService"
-            android:permission="android.permission.BIND_VOICE_INTERACTION" />
-        <service
             android:name=".VoiceRecognitionService"
             android:exported="true"
             android:foregroundServiceType="microphone"

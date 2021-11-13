@@ -70,7 +70,7 @@ public class AdaRecognitionListener implements RecognitionListener {
         String speechRecognitionResult = recognitionResults.get(0);
         sendConversationText(speechRecognitionResult);
         AdaActions.showRecognitionResult(context, speechRecognitionResult);
-        Logger.information("Recognized speech: " + speechRecognitionResult);
+        Logger.information("Recognized speech: %s", speechRecognitionResult);
     }
 
     private void sendConversationText(String voiceRecognitionResult) {
