@@ -79,7 +79,7 @@ public class ChatboxFragment extends Fragment {
             } else if (action.equals(AdaActions.ACTION_SHOW_REPLY)) {
                 handleShowReply(intent);
             } else if (action.equals(AdaActions.ACTION_SHOW_ERROR)) {
-                handleShowError();
+                handleShowError(intent);
             } else if (action.equals(AdaActions.ACTION_SHOW_PARTIAL_RESULT)) {
                 handleShowPartialResult(intent);
             }
@@ -136,9 +136,17 @@ public class ChatboxFragment extends Fragment {
             replyTextView.requestFocus();
         }
 
-        private void handleShowError() {
+        private void handleShowError(Intent intent) {
             if (currentRequestTextView != null) {
-                currentRequestTextView.setText("I did not hear anything");
+                String message = intent.getStringExtra(AdaActions.EXTRA_MESSAGE);
+                if (message == null) {
+                    Logger.warning("Received null message");
+                    return;
+                }
+
+                Logger.debug("Received message: %s", message);
+
+                currentRequestTextView.setText(message);
                 currentRequestTextView.setBackgroundColor(getResources().getColor(R.color.RecognitionFailure));
                 currentRequestTextView.setTextColor(getResources().getColor(R.color.White));
             }

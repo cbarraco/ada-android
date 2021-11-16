@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -61,7 +62,7 @@ public class AdaRecognitionListener implements RecognitionListener {
     @Override
     public void onError(int i) {
         Logger.warning("Error encountered during recognition");
-        AdaActions.showError(context);
+        AdaActions.showError(context, "I didn't hear anything");
     }
 
     @Override
@@ -86,9 +87,17 @@ public class AdaRecognitionListener implements RecognitionListener {
     }
 
     @NonNull
-    private Request buildRequest(String voiceRecognitionResult) {
-        // TODO validate url
-        String homeAssistantUrl = getServerAddressFromPreferences() + "/api/conversation/process";
+    private Request buildRequest(String voiceRecognitionResult) throws IOException {
+        String serverAddress = getServerAddressFromPreferences();
+
+        String homeAssistantUrl = serverAddress + "/api/conversation/process";
+        boolean isValidUrl = URLUtil.isValidUrl(homeAssistantUrl);
+        if (!isValidUrl) {
+            String message = "Home Assistant URL is not valid";
+            Logger.warning(message);
+            AdaActions.showError(context, message);
+            throw new IOException(message);
+        }
 
         String authorizationHeaderName = "Authorization";
         String homeAssistantToken = getHomeAssistantTokenFromPreferences();

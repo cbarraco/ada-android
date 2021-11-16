@@ -37,9 +37,10 @@ public class AdaActions {
         localBroadcastManager.sendBroadcast(intent);
     }
 
-    public static void showError(Context context) {
+    public static void showError(Context context, String message) {
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
         Intent intent = new Intent(ACTION_SHOW_ERROR);
+        intent.putExtra(EXTRA_MESSAGE, message);
         localBroadcastManager.sendBroadcast(intent);
     }
 

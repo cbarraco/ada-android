@@ -129,8 +129,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            Logger.information("opening SettingsActivity");
+            Logger.information("Opening SettingsActivity from action bar");
             Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_about){
+            Logger.debug("Opening AboutActivity from action bar");
+            Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
             return true;
         }
