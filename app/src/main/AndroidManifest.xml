@@ -36,7 +36,6 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VOICE_COMMAND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -48,18 +47,35 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
+            android:exported="true"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AboutActivity"
-            android:exported="false"
+            android:exported="true"
+            android:label="About"
             android:parentActivityName=".MainActivity" />
 
+        <service
+            android:name=".voiceinteraction.AdaVoiceInteractionService"
+            android:exported="true"
+            android:permission="android.permission.BIND_VOICE_INTERACTION"
+            android:process=":interactor">
+            <meta-data
+                android:name="android.voice_interaction"
+                android:resource="@xml/assist_service" />
+
+            <intent-filter>
+                <action android:name="android.service.voice.VoiceInteractionService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".voiceinteraction.AdaVoiceInteractionSessionService"
+            android:permission="android.permission.BIND_VOICE_INTERACTION" />
         <service
             android:name=".VoiceRecognitionService"
             android:exported="true"
             android:foregroundServiceType="microphone"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
-
 </manifest>
