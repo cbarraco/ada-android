@@ -10,15 +10,9 @@
         <item name="colorSecondaryVariant">@color/HomeAssistant</item>
         <item name="colorOnSecondary">@color/White</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/HomeAssistant</item>
+        <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
-        <item name="android:itemBackground">#ffffffff</item>
-        <item name="android:textColor">#F2000000</item>
-        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
-        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+
     </style>
-
-    <style name="Theme.Ada.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Ada.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

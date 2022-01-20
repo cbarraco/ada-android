@@ -3,22 +3,17 @@
     <style name="Theme.Ada" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/HomeAssistant</item>
-        <item name="colorPrimaryVariant">@color/Black</item>
-        <item name="colorOnPrimary">@color/Black</item>
+        <item name="colorPrimaryVariant">@color/Dark</item>
+        <item name="colorOnPrimary">@color/Dark</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/HomeAssistant</item>
-        <item name="colorSecondaryVariant">@color/Black</item>
-        <item name="colorOnSecondary">@color/Black</item>
+        <item name="colorSecondaryVariant">@color/Dark</item>
+        <item name="colorOnSecondary">@color/Dark</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="android:itemBackground">#F2000000</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
-        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/Dark</item>
+        <item name="android:navigationBarColor" tools:targetApi="l">#303030</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
     </style>
 
-    <style name="Theme.Ada.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Ada.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 </resources>

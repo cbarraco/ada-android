@@ -56,9 +56,10 @@ public class VoiceRecognitionService extends Service {
             manager.createNotificationChannel(serviceChannel);
         }
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        Context applicationContext = getApplicationContext();
+        Intent notificationIntent = new Intent(applicationContext, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(applicationContext,
+                0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Running in foreground")

@@ -45,17 +45,6 @@
                 <category android:name="android.intent.category.VOICE" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="true"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".AboutActivity"
-            android:exported="true"
-            android:label="About"
-            android:parentActivityName=".MainActivity" />
-
         <service
             android:name=".voiceinteraction.AdaVoiceInteractionService"
             android:exported="true"

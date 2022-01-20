@@ -14,7 +14,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import ca.barraco.carlo.ada.databinding.ActivityMainBinding;
@@ -25,12 +28,11 @@ public class MainActivity extends AppCompatActivity {
             AdaActions.ACTION_SHOW_REPLY,
             AdaActions.ACTION_SHOW_ERROR,
     };
+    private final SettingsFragment settingsFragment = new SettingsFragment();
+    private final AboutFragment aboutFragment = new AboutFragment();
+    private final ChatboxFragment chatboxFragment = new ChatboxFragment();
     private boolean fromAssistantButton;
-
-    private AdaRecognitionListener adaRecognitionListener;
-
     private MainActivityBroadcastReceiver mainActivityBroadcastReceiver;
-    private PowerManager.WakeLock wakeLock_partial = null;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -74,13 +76,45 @@ public class MainActivity extends AppCompatActivity {
             startListening();
         }
 
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ca.barraco.carlo.ada.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.bottomAppBar.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            FragmentManager supportFragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+
+            if (id == R.id.action_settings) {
+                Logger.information("Opening Settings from action bar");
+                fragmentTransaction
+                        .replace(R.id.mainFragmentContainer, settingsFragment, "SETTINGS")
+                        .commit();
+            } else if (id == R.id.action_about) {
+                Logger.debug("Opening About from action bar");
+                fragmentTransaction
+                        .replace(R.id.mainFragmentContainer, aboutFragment, "ABOUT")
+                        .commit();
+            }
+            return true;
+        });
+
+        binding.bottomAppBar.setNavigationOnClickListener(v -> {
+            Logger.information("Opening Home from action bar");
+            FragmentManager supportFragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+            fragmentTransaction
+                    .replace(R.id.mainFragmentContainer, chatboxFragment, "CHATBOX")
+                    .commit();
+        });
 
         if (fromAssistantButton) {
             binding.fab.setVisibility(View.GONE);
         } else {
-            binding.fab.setOnClickListener(view -> startListening());
+            binding.fab.setOnClickListener(view -> {
+                FragmentManager supportFragmentManager = getSupportFragmentManager();
+                supportFragmentManager.beginTransaction().replace(R.id.mainFragmentContainer, chatboxFragment).commit();
+                startListening();
+            });
         }
 
         setUpBroadcastReceiver();
@@ -116,31 +150,6 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(getApplicationContext(), VoiceRecognitionService.class);
         serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
         ContextCompat.startForegroundService(this, serviceIntent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            Logger.information("Opening SettingsActivity from action bar");
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_about){
-            Logger.debug("Opening AboutActivity from action bar");
-            Intent intent = new Intent(this, AboutActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public class MainActivityBroadcastReceiver extends BroadcastReceiver {
@@ -180,7 +189,5 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
-
-
     }
 }

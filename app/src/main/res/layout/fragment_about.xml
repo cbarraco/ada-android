@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp"
-        tools:context=".AboutActivity">
+        tools:context=".AboutFragment">
 
         <TextView
             android:id="@+id/aboutTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_page"
-            tools:layout_editor_absoluteX="113dp"
-            tools:layout_editor_absoluteY="259dp" />
+            android:text="@string/about_page" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="web"
             android:text="@string/privacy_policy" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="@string/license" />
     </LinearLayout>
 </ScrollView>

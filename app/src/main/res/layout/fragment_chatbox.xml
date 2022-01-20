@@ -3,8 +3,7 @@
     android:id="@+id/chatScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:layout_marginTop="18dp">
+    android:layout_gravity="center">
 
     <LinearLayout
         android:id="@+id/chatLayout"
@@ -22,7 +21,7 @@
             android:padding="6dp"
             android:text="How can I help?"
             android:textColor="@color/White"
-            android:textSize="18dp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 </ScrollView>

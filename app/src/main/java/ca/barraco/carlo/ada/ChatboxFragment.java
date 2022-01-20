@@ -38,7 +38,7 @@ public class ChatboxFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        chatLayout = getView().findViewById(R.id.chatLayout);
+        chatLayout = view.findViewById(R.id.chatLayout);
         setUpBroadcastReceiver();
     }
 
@@ -96,8 +96,10 @@ public class ChatboxFragment extends Fragment {
             currentRequestTextView.setLayoutParams(params);
             currentRequestTextView.setBackgroundColor(getResources().getColor(R.color.AdaRequest));
             currentRequestTextView.setTextColor(getResources().getColor(R.color.Black));
-
+            currentRequestTextView.setFocusable(true);
+            currentRequestTextView.setFocusableInTouchMode(true);
             chatLayout.addView(currentRequestTextView);
+            currentRequestTextView.requestFocus();
         }
 
         private void handleShowRecognitionResult(@NonNull Intent intent) {
@@ -165,6 +167,7 @@ public class ChatboxFragment extends Fragment {
             }
         }
 
+        @Nullable
         private TextView createTextView(String message) {
             if (chatLayout != null && chatLayout.getContext() != null) {
                 Context chatLayoutContext = chatLayout.getContext();
