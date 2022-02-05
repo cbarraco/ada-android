@@ -9,7 +9,7 @@ android {
         applicationId "ca.barraco.carlo.ada"
         minSdk 23
         targetSdk 32
-        versionCode 8
+        versionCode 9
         versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
