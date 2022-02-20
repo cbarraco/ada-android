@@ -17,7 +17,7 @@
     <string name="recognition_recognizing">Recognizing</string>
     <string name="recognition_listening">Listening</string>
 
-    <string name="privacy_policy">Privacy Policy: https://carlo.barraco.ca/projects/ada-android/privacy-policy</string>
+    <string name="privacy_policy">Privacy Policy: https://carlo.barraco.ca/projects/ada-android/privacy-policy.html</string>
     <string name="license">This app is open source under the MIT license. The source code is available here: https://github.com/cbarraco/ada-android</string>
     <string name="about_page"><![CDATA[
     <h1>Ada</h1>
