@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.ada.ui;
 
 import android.content.Context;
 import android.content.Intent;

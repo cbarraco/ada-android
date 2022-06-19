@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.ada.recognition;
 
 import android.content.ComponentName;
 import android.content.Intent;

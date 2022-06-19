@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.ada.ui;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -7,20 +7,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import ca.barraco.carlo.ada.Logger;
+import ca.barraco.carlo.ada.R;
 import ca.barraco.carlo.ada.databinding.ActivityMainBinding;
+import ca.barraco.carlo.ada.recognition.VoiceRecognitionService;
 
 public class MainActivity extends AppCompatActivity {
     private static final String[] Actions = {

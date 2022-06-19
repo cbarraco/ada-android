@@ -1,8 +1,10 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.ada.ui;
 
 import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
+
+import ca.barraco.carlo.ada.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

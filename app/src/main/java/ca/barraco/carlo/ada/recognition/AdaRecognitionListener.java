@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.ada.recognition;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,6 +17,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ca.barraco.carlo.ada.ui.AdaActions;
+import ca.barraco.carlo.ada.Logger;
+import ca.barraco.carlo.ada.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;

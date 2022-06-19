@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.ada.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,6 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import ca.barraco.carlo.ada.Logger;
+import ca.barraco.carlo.ada.R;
 
 public class ChatboxFragment extends Fragment {
     private static final String[] Actions = {

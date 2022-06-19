@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.voiceinteraction;
+package ca.barraco.carlo.ada.recognition.voiceinteraction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.service.voice.VoiceInteractionSession;
 import androidx.annotation.NonNull;
 
 import ca.barraco.carlo.ada.Logger;
-import ca.barraco.carlo.ada.MainActivity;
+import ca.barraco.carlo.ada.ui.MainActivity;
 
 public class AdaVoiceInteractionSession extends VoiceInteractionSession {
 

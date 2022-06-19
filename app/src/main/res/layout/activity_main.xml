@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mainFragmentContainer"
-        android:name="ca.barraco.carlo.ada.ChatboxFragment"
+        android:name="ca.barraco.carlo.ada.ui.ChatboxFragment"
         android:tag="CHATBOX"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

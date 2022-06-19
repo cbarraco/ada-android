@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.ada.recognition;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -17,6 +17,10 @@ import android.speech.SpeechRecognizer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import ca.barraco.carlo.ada.Logger;
+import ca.barraco.carlo.ada.ui.MainActivity;
+import ca.barraco.carlo.ada.R;
 
 public class VoiceRecognitionService extends Service {
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
