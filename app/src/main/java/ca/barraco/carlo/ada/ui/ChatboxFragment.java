@@ -49,7 +49,7 @@ public class ChatboxFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void handleStartListening(StartListeningEvent startListeningEvent) {
+    public void handleStartListening(StartListeningEvent startListeningEvent) {
         currentRequestTextView = createTextView("...");
         if (currentRequestTextView == null) {
             return;
@@ -67,13 +67,13 @@ public class ChatboxFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void handleShowRecognitionResult(@NonNull ShowRecognitionEvent showRecognitionEvent) {
+    public void handleShowRecognitionResult(@NonNull ShowRecognitionEvent showRecognitionEvent) {
         Logger.debug("Received message: %s", showRecognitionEvent.getMessage());
         currentRequestTextView.setText(showRecognitionEvent.getMessage());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void handleShowReply(@NonNull ShowReplyEvent showReplyEvent) {
+    public void handleShowReply(@NonNull ShowReplyEvent showReplyEvent) {
         Logger.debug("Received message: %s", showReplyEvent.getReply());
         TextView replyTextView = createTextView(showReplyEvent.getReply());
         if (replyTextView == null) {
@@ -93,7 +93,7 @@ public class ChatboxFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void handleShowError(ShowErrorEvent showErrorEvent) {
+    public void handleShowError(ShowErrorEvent showErrorEvent) {
         if (currentRequestTextView != null) {
             Logger.debug("Received message: %s", showErrorEvent.getMessage());
             currentRequestTextView.setText(showErrorEvent.getMessage());
@@ -103,7 +103,7 @@ public class ChatboxFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void handleShowPartialResult(@NonNull ShowPartialResultEvent showPartialResultEvent) {
+    public void handleShowPartialResult(@NonNull ShowPartialResultEvent showPartialResultEvent) {
         Logger.debug("Received partial results: %s", showPartialResultEvent.getMessage());
         if (currentRequestTextView != null) {
             currentRequestTextView.setText(showPartialResultEvent.getMessage());

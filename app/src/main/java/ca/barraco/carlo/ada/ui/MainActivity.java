@@ -136,21 +136,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void handleShowRecognitionResult(ShowRecognitionEvent showRecognitionEvent) {
+    public void handleShowRecognitionResult(ShowRecognitionEvent showRecognitionEvent) {
         if (fromAssistantButton) {
             finish();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void handleShowReply(ShowReplyEvent showReplyEvent) {
+    public void handleShowReply(ShowReplyEvent showReplyEvent) {
         if (fromAssistantButton) {
             finish();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void handleShowError(ShowErrorEvent showErrorEvent) {
+    public void handleShowError(ShowErrorEvent showErrorEvent) {
         if (fromAssistantButton) {
             finish();
         }
