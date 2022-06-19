@@ -1,37 +1,33 @@
 package ca.barraco.carlo.ada.ui;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import ca.barraco.carlo.ada.Logger;
 import ca.barraco.carlo.ada.R;
 import ca.barraco.carlo.ada.databinding.ActivityMainBinding;
+import ca.barraco.carlo.ada.events.ShowErrorEvent;
+import ca.barraco.carlo.ada.events.ShowRecognitionEvent;
+import ca.barraco.carlo.ada.events.ShowReplyEvent;
 import ca.barraco.carlo.ada.recognition.VoiceRecognitionService;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String[] Actions = {
-            AdaActions.ACTION_SHOW_RECOGNITION_RESULT,
-            AdaActions.ACTION_SHOW_REPLY,
-            AdaActions.ACTION_SHOW_ERROR,
-    };
     private final SettingsFragment settingsFragment = new SettingsFragment();
     private final AboutFragment aboutFragment = new AboutFragment();
     private final ChatboxFragment chatboxFragment = new ChatboxFragment();
     private boolean fromAssistantButton;
-    private MainActivityBroadcastReceiver mainActivityBroadcastReceiver;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -116,25 +112,13 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        setUpBroadcastReceiver();
-    }
-
-    private void setUpBroadcastReceiver() {
-        IntentFilter intentFilter = new IntentFilter();
-        for (String action : Actions) {
-            intentFilter.addAction(action);
-        }
-
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        mainActivityBroadcastReceiver = new MainActivityBroadcastReceiver();
-        localBroadcastManager.registerReceiver(mainActivityBroadcastReceiver, intentFilter);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        localBroadcastManager.unregisterReceiver(mainActivityBroadcastReceiver);
+        EventBus.getDefault().unregister(this);
     }
 
     private void startListening() {
@@ -151,42 +135,24 @@ public class MainActivity extends AppCompatActivity {
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
-    public class MainActivityBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, @NonNull Intent intent) {
-            String action = intent.getAction();
-            if (action == null) {
-                Logger.warning("Received null action");
-                return;
-            }
-
-            Logger.debug("Handling %s", action);
-            if (action.equals(AdaActions.ACTION_SHOW_RECOGNITION_RESULT)) {
-                handleShowRecognitionResult();
-            } else if (action.equals(AdaActions.ACTION_SHOW_REPLY)) {
-                handleShowReply();
-            } else if (action.equals(AdaActions.ACTION_SHOW_ERROR)) {
-                handleShowError();
-            }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    private void handleShowRecognitionResult(ShowRecognitionEvent showRecognitionEvent) {
+        if (fromAssistantButton) {
+            finish();
         }
+    }
 
-        private void handleShowRecognitionResult() {
-            if (fromAssistantButton) {
-                finish();
-            }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    private void handleShowReply(ShowReplyEvent showReplyEvent) {
+        if (fromAssistantButton) {
+            finish();
         }
+    }
 
-        private void handleShowReply() {
-            if (fromAssistantButton) {
-                finish();
-            }
-        }
-
-        private void handleShowError() {
-            if (fromAssistantButton) {
-                finish();
-            }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    private void handleShowError(ShowErrorEvent showErrorEvent) {
+        if (fromAssistantButton) {
+            finish();
         }
     }
 }

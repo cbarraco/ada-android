@@ -39,7 +39,7 @@ public class AdaRecognitionListener implements RecognitionListener {
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
-        AdaActions.startListening(context);
+        AdaActions.startListening();
     }
 
     @Override
@@ -65,15 +65,15 @@ public class AdaRecognitionListener implements RecognitionListener {
     @Override
     public void onError(int i) {
         Logger.warning("Error encountered during recognition");
-        AdaActions.showError(context, "I didn't hear anything");
+        AdaActions.showError("I didn't hear anything");
     }
 
     @Override
-    public void onResults(Bundle bundle) {
+    public void onResults(@NonNull Bundle bundle) {
         ArrayList<String> recognitionResults = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String speechRecognitionResult = recognitionResults.get(0);
         sendConversationText(speechRecognitionResult);
-        AdaActions.showRecognitionResult(context, speechRecognitionResult);
+        AdaActions.showRecognitionResult(speechRecognitionResult);
         Logger.information("Recognized speech: %s", speechRecognitionResult);
     }
 
@@ -98,7 +98,7 @@ public class AdaRecognitionListener implements RecognitionListener {
         if (!isValidUrl) {
             String message = "Home Assistant URL is not valid";
             Logger.warning(message);
-            AdaActions.showError(context, message);
+            AdaActions.showError(message);
             throw new IOException(message);
         }
 
@@ -130,11 +130,11 @@ public class AdaRecognitionListener implements RecognitionListener {
     }
 
     @Override
-    public void onPartialResults(Bundle bundle) {
+    public void onPartialResults(@NonNull Bundle bundle) {
         ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String word = data.get(data.size() - 1);
         if (!word.isEmpty()) {
-            AdaActions.showPartialResult(context, word);
+            AdaActions.showPartialResult(word);
         }
     }
 
@@ -155,7 +155,7 @@ public class AdaRecognitionListener implements RecognitionListener {
             String reply = parseResponse(response);
             Logger.debug("Got " + response.code() + " reply from Home Assistant: " + reply);
 
-            AdaActions.showReply(context, reply);
+            AdaActions.showReply(reply);
         }
 
         @Nullable

@@ -14,10 +14,10 @@ import androidx.annotation.NonNull;
 import org.jetbrains.annotations.Contract;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class RecognitionServiceTrampoline extends RecognitionService {
-    public final ConcurrentHashMap<Callback, SpeechRecognizer> recognizerMap =
-            new ConcurrentHashMap<>();
+    public final ConcurrentMap<Callback, SpeechRecognizer> recognizerMap = new ConcurrentHashMap<>();
 
     public RecognitionServiceTrampoline() {
     }
@@ -117,7 +117,7 @@ public class RecognitionServiceTrampoline extends RecognitionService {
             public void onEvent(int eventType, Bundle params) {
             }
 
-            private void logIfThrows(RemoteExceptionRunnable runnable) {
+            private void logIfThrows(@NonNull RemoteExceptionRunnable runnable) {
                 try {
                     runnable.run();
                 } catch (RemoteException e) {

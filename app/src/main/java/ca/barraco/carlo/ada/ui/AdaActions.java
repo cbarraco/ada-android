@@ -1,53 +1,36 @@
 package ca.barraco.carlo.ada.ui;
 
-import android.content.Context;
-import android.content.Intent;
+import org.greenrobot.eventbus.EventBus;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import ca.barraco.carlo.ada.events.ShowErrorEvent;
+import ca.barraco.carlo.ada.events.ShowPartialResultEvent;
+import ca.barraco.carlo.ada.events.ShowRecognitionEvent;
+import ca.barraco.carlo.ada.events.ShowReplyEvent;
+import ca.barraco.carlo.ada.events.StartListeningEvent;
 
 public class AdaActions {
-    public static final String ACTION_START_LISTENING = "Ada.ACTION_START_LISTENING";
-    public static final String ACTION_SHOW_RECOGNITION_RESULT = "Ada.ACTION_SHOW_RECOGNITION_RESULT";
-    public static final String ACTION_SHOW_REPLY = "Ada.ACTION_SHOW_REPLY";
-    public static final String ACTION_SHOW_ERROR = "Ada.ACTION_SHOW_ERROR";
-    public static final String ACTION_SHOW_PARTIAL_RESULT = "Ada.ACTION_SHOW_PARTIAL_RESULT";
-    public static final String EXTRA_MESSAGE = "Ada.EXTRA_MESSAGE";
 
     private AdaActions() {
         // hidden constructor
     }
 
-    public static void startListening(Context context) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent(ACTION_START_LISTENING);
-        localBroadcastManager.sendBroadcast(intent);
+    public static void startListening() {
+        EventBus.getDefault().post(new StartListeningEvent());
     }
 
-    public static void showRecognitionResult(Context context, String reply) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent(ACTION_SHOW_RECOGNITION_RESULT);
-        intent.putExtra(EXTRA_MESSAGE, reply);
-        localBroadcastManager.sendBroadcast(intent);
+    public static void showRecognitionResult(String reply) {
+        EventBus.getDefault().post(new ShowRecognitionEvent(reply));
     }
 
-    public static void showReply(Context context, String reply) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent(ACTION_SHOW_REPLY);
-        intent.putExtra(EXTRA_MESSAGE, reply);
-        localBroadcastManager.sendBroadcast(intent);
+    public static void showReply(String reply) {
+        EventBus.getDefault().post(new ShowReplyEvent(reply));
     }
 
-    public static void showError(Context context, String message) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent(ACTION_SHOW_ERROR);
-        intent.putExtra(EXTRA_MESSAGE, message);
-        localBroadcastManager.sendBroadcast(intent);
+    public static void showError(String message) {
+        EventBus.getDefault().post(new ShowErrorEvent(message));
     }
 
-    public static void showPartialResult(Context context, String reply) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context);
-        Intent intent = new Intent(ACTION_SHOW_PARTIAL_RESULT);
-        intent.putExtra(EXTRA_MESSAGE, reply);
-        localBroadcastManager.sendBroadcast(intent);
+    public static void showPartialResult(String reply) {
+        EventBus.getDefault().post(new ShowPartialResultEvent(reply));
     }
 }
