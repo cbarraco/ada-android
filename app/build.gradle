@@ -3,21 +3,22 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "ca.barraco.carlo.ada"
         minSdk 23
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        targetSdk 33
+        versionCode 10
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -28,14 +29,23 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'ca.barraco.carlo.ada'
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.navigation:navigation-ui:2.3.5'
-    implementation('com.squareup.okhttp3:okhttp:5.0.0-alpha.2')
-    implementation 'androidx.preference:preference:1.1.1'
+    // google libraries
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.navigation:navigation-ui:2.4.2'
+    implementation 'androidx.preference:preference:1.2.0'
+    implementation "androidx.fragment:fragment:1.4.1"
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    // third party libraries
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
+    implementation "org.greenrobot:eventbus:3.3.1"
+
+    // unit test libraries
     testImplementation 'junit:junit:4.13.2'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

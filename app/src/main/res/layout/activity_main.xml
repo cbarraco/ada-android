@@ -4,77 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/Theme.Ada.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.Ada.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/mainFragmentContainer"
+        android:name="ca.barraco.carlo.ada.ui.ChatboxFragment"
+        android:tag="CHATBOX"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/statusView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:layout_marginTop="18dp"
-            android:text="@string/recognition_idle"
-            android:textSize="24sp"
-            android:visibility="visible" />
+        android:layout_marginBottom="96dp"
+        tools:layout="@layout/fragment_chatbox" />
 
-        <ScrollView
-            android:id="@+id/chatScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="18dp">
-
-            <LinearLayout
-                android:id="@+id/chatLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:background="@color/HomeAssistant"
-                    android:gravity="start"
-                    android:padding="6dp"
-                    android:text="How can I help?"
-                    android:textColor="@color/White"
-                    android:textSize="18dp" />
-
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:fabCradleMargin="10dp"
+        app:fabCradleRoundedCornerRadius="10dp"
+        app:fabCradleVerticalOffset="10dp"
+        app:menu="@menu/menu_main"
+        app:navigationIcon="@drawable/baseline_home_24dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
         android:contentDescription="Activate microphone"
-        android:tint="@color/White"
+        app:layout_anchor="@id/bottomAppBar"
         app:srcCompat="@drawable/baseline_mic_24dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,2 +1,2 @@
-# ada-android
-Home Assistant's Ada implemented as an Android app
+# rhasspyAssistant-android
+Home Assistant's RhasspyAssistant implemented as an Android app

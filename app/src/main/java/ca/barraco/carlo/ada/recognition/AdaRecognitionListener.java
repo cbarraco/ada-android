@@ -1,10 +1,11 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.ada.recognition;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ca.barraco.carlo.ada.ui.AdaActions;
+import ca.barraco.carlo.ada.Logger;
+import ca.barraco.carlo.ada.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -25,22 +29,22 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-public class MyRecognitionListener implements RecognitionListener {
+public class AdaRecognitionListener implements RecognitionListener {
 
     private final Context context;
 
-    public MyRecognitionListener(Context context) {
+    public AdaRecognitionListener(Context context) {
         this.context = context;
     }
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
-        MainActivity.startListening(context);
+        AdaActions.startListening();
     }
 
     @Override
     public void onBeginningOfSpeech() {
-        MainActivity.startRecognizing(context);
+        // not used
     }
 
     @Override
@@ -55,21 +59,22 @@ public class MyRecognitionListener implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
-        MainActivity.stopListening(context);
-    }
-
-    @Override
-    public void onError(int i) {
         // not used
     }
 
     @Override
-    public void onResults(Bundle bundle) {
+    public void onError(int i) {
+        Logger.warning("Error encountered during recognition");
+        AdaActions.showError("I didn't hear anything");
+    }
+
+    @Override
+    public void onResults(@NonNull Bundle bundle) {
         ArrayList<String> recognitionResults = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String speechRecognitionResult = recognitionResults.get(0);
         sendConversationText(speechRecognitionResult);
-        MainActivity.showRecognitionResult(context, speechRecognitionResult);
-        Logger.information("Recognized speech: " + speechRecognitionResult);
+        AdaActions.showRecognitionResult(speechRecognitionResult);
+        Logger.information("Recognized speech: %s", speechRecognitionResult);
     }
 
     private void sendConversationText(String voiceRecognitionResult) {
@@ -85,9 +90,17 @@ public class MyRecognitionListener implements RecognitionListener {
     }
 
     @NonNull
-    private Request buildRequest(String voiceRecognitionResult) {
-        // TODO validate url
-        String homeAssistantUrl = getServerAddressFromPreferences() + "/api/conversation/process";
+    private Request buildRequest(String voiceRecognitionResult) throws IOException {
+        String serverAddress = getServerAddressFromPreferences();
+
+        String homeAssistantUrl = serverAddress + "/api/conversation/process";
+        boolean isValidUrl = URLUtil.isValidUrl(homeAssistantUrl);
+        if (!isValidUrl) {
+            String message = "Home Assistant URL is not valid";
+            Logger.warning(message);
+            AdaActions.showError(message);
+            throw new IOException(message);
+        }
 
         String authorizationHeaderName = "Authorization";
         String homeAssistantToken = getHomeAssistantTokenFromPreferences();
@@ -117,8 +130,12 @@ public class MyRecognitionListener implements RecognitionListener {
     }
 
     @Override
-    public void onPartialResults(Bundle bundle) {
-        Logger.debug("Got partial results");
+    public void onPartialResults(@NonNull Bundle bundle) {
+        ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        String word = data.get(data.size() - 1);
+        if (!word.isEmpty()) {
+            AdaActions.showPartialResult(word);
+        }
     }
 
     @Override
@@ -126,7 +143,7 @@ public class MyRecognitionListener implements RecognitionListener {
         // not used
     }
 
-    private class MyCallback implements Callback {
+    private static class MyCallback implements Callback {
         @Override
         public void onFailure(@NonNull Call call, @NonNull IOException e) {
             // TODO implement failure handling for HTTP call
@@ -136,8 +153,9 @@ public class MyRecognitionListener implements RecognitionListener {
         @Override
         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
             String reply = parseResponse(response);
-            Logger.debug("Got reply from Home Assistant: " + reply);
-            MainActivity.showReply(context, reply);
+            Logger.debug("Got " + response.code() + " reply from Home Assistant: " + reply);
+
+            AdaActions.showReply(reply);
         }
 
         @Nullable
@@ -146,6 +164,7 @@ public class MyRecognitionListener implements RecognitionListener {
                 ResponseBody responseBody = response.body();
                 if (responseBody != null) {
                     String responseJsonBody = responseBody.string();
+                    Logger.debug(responseJsonBody);
                     JSONObject responseJsonObject = new JSONObject(responseJsonBody);
                     return responseJsonObject.getJSONObject("speech").getJSONObject("plain").getString("speech");
                 }
