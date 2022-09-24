@@ -1,16 +1,16 @@
-package ca.barraco.carlo.ada.ui;
+package ca.barraco.carlo.rhasspy;
 
 import org.greenrobot.eventbus.EventBus;
 
-import ca.barraco.carlo.ada.events.ShowErrorEvent;
-import ca.barraco.carlo.ada.events.ShowPartialResultEvent;
-import ca.barraco.carlo.ada.events.ShowRecognitionEvent;
-import ca.barraco.carlo.ada.events.ShowReplyEvent;
-import ca.barraco.carlo.ada.events.StartListeningEvent;
+import ca.barraco.carlo.rhasspy.events.ShowErrorEvent;
+import ca.barraco.carlo.rhasspy.events.ShowPartialResultEvent;
+import ca.barraco.carlo.rhasspy.events.ShowRecognitionEvent;
+import ca.barraco.carlo.rhasspy.events.ShowReplyEvent;
+import ca.barraco.carlo.rhasspy.events.StartListeningEvent;
 
-public class AdaActions {
+public class Actions {
 
-    private AdaActions() {
+    private Actions() {
         // hidden constructor
     }
 

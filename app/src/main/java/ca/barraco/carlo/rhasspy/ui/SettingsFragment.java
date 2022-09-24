@@ -1,10 +1,10 @@
-package ca.barraco.carlo.ada.ui;
+package ca.barraco.carlo.rhasspy.ui;
 
 import android.os.Bundle;
 
 import androidx.preference.PreferenceFragmentCompat;
 
-import ca.barraco.carlo.ada.R;
+import ca.barraco.carlo.rhasspy.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.ui;
+package ca.barraco.carlo.rhasspy.ui;
 
 import android.Manifest;
 import android.content.Intent;
@@ -15,13 +15,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import ca.barraco.carlo.ada.Logger;
-import ca.barraco.carlo.ada.R;
-import ca.barraco.carlo.ada.databinding.ActivityMainBinding;
-import ca.barraco.carlo.ada.events.ShowErrorEvent;
-import ca.barraco.carlo.ada.events.ShowRecognitionEvent;
-import ca.barraco.carlo.ada.events.ShowReplyEvent;
-import ca.barraco.carlo.ada.recognition.VoiceRecognitionService;
+import ca.barraco.carlo.rhasspy.Logger;
+import ca.barraco.carlo.rhasspy.R;
+import ca.barraco.carlo.rhasspy.databinding.ActivityMainBinding;
+import ca.barraco.carlo.rhasspy.events.ShowErrorEvent;
+import ca.barraco.carlo.rhasspy.events.ShowRecognitionEvent;
+import ca.barraco.carlo.rhasspy.events.ShowReplyEvent;
+import ca.barraco.carlo.rhasspy.recognition.VoiceRecognitionService;
 
 public class MainActivity extends AppCompatActivity {
     private final SettingsFragment settingsFragment = new SettingsFragment();
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             startListening();
         }
 
-        ca.barraco.carlo.ada.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.bottomAppBar.setOnMenuItemClickListener(item -> {

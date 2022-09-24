@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.recognition;
+package ca.barraco.carlo.rhasspy.recognition;
 
 import android.content.ComponentName;
 import android.content.Intent;

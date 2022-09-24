@@ -1,9 +1,9 @@
-package ca.barraco.carlo.ada.events;
+package ca.barraco.carlo.rhasspy.events;
 
-public class ShowErrorEvent {
+public class ShowPartialResultEvent {
     private final String message;
 
-    public ShowErrorEvent(String message) {
+    public ShowPartialResultEvent(String message) {
         this.message = message;
     }
 

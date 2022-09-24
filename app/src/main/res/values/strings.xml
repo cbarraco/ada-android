@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ada</string>
+    <string name="app_name">Rhasspy</string>
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
 
@@ -17,23 +17,23 @@
     <string name="recognition_recognizing">Recognizing</string>
     <string name="recognition_listening">Listening</string>
 
-    <string name="privacy_policy">Privacy Policy: https://carlo.barraco.ca/projects/ada-android/privacy-policy.html</string>
-    <string name="license">This app is open source under the MIT license. The source code is available here: https://github.com/cbarraco/ada-android</string>
+    <string name="privacy_policy">Privacy Policy: https://carlo.barraco.ca/projects/rhasspy-android/privacy-policy.html</string>
+    <string name="license">This app is open source under the MIT license. The source code is available here: https://github.com/cbarraco/rhasspy-android</string>
     <string name="about_page"><![CDATA[
-    <h1>Ada</h1>
-    <p>Ada is a voice assistant built into Home Assistant and provides voice control of Home Assistant integrations.</p>
-    <p>I decided to implement this Android app to make Ada more accessible and convenient to use. More specifically, I wanted to make Ada available as an Assistant app so it can be started from the Assistant button on compatible headphones.</p>
+    <h1>Rhasspy</h1>
+    <p>Rhasspy is a voice assistant built into Home Assistant and provides voice control of Home Assistant integrations.</p>
+    <p>I decided to implement this Android app to make Rhasspy more accessible and convenient to use. More specifically, I wanted to make Rhasspy available as an Assistant app so it can be started from the Assistant button on compatible headphones.</p>
 
     <p><b>Features:</b></p>
     <p>
-        - Familiar UI consistent with Ada on the Lovelace UI.<br/>
+        - Familiar UI consistent with Rhasspy on the Lovelace UI.<br/>
         - Easy to set up, just enter Home Assistant URL and Long-lived access token in Settings.<br/>
         - Voice recognition runs locally on the device, so no internet connection is required as long as Home Assistant is accessible.<br/>
-        - Ada is recognized by Android as an Assistant app so it can be set as the default Assistant in the Android settings app.
-        - Voice recognition runs as a Service, so Ada can be accessed when the screen is locked via the Assistant button on compatible headphones.<br/>
+        - Rhasspy is recognized by Android as an Assistant app so it can be set as the default Assistant in the Android settings app.
+        - Voice recognition runs as a Service, so Rhasspy can be accessed when the screen is locked via the Assistant button on compatible headphones.<br/>
     </p>
 
-    <p>Ada needs permission to access the microphone to provide voice recognition.</p>
+    <p>Rhasspy needs permission to access the microphone to provide voice recognition.</p>
 
     <p>Root access is not required to use this app.</p>]]></string>
     <!-- Preference Titles -->
@@ -52,5 +52,5 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="action_ada">Ada</string>
+    <string name="action_ada">Rhasspy</string>
 </resources>

@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.rhasspy;
 
 import org.junit.Test;
 

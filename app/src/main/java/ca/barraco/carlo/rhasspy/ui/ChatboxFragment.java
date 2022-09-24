@@ -1,6 +1,7 @@
-package ca.barraco.carlo.ada.ui;
+package ca.barraco.carlo.rhasspy.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -14,17 +15,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.elevation.SurfaceColors;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import ca.barraco.carlo.ada.Logger;
-import ca.barraco.carlo.ada.R;
-import ca.barraco.carlo.ada.events.ShowPartialResultEvent;
-import ca.barraco.carlo.ada.events.ShowErrorEvent;
-import ca.barraco.carlo.ada.events.ShowRecognitionEvent;
-import ca.barraco.carlo.ada.events.ShowReplyEvent;
-import ca.barraco.carlo.ada.events.StartListeningEvent;
+import ca.barraco.carlo.rhasspy.Logger;
+import ca.barraco.carlo.rhasspy.events.ShowPartialResultEvent;
+import ca.barraco.carlo.rhasspy.events.ShowErrorEvent;
+import ca.barraco.carlo.rhasspy.events.ShowRecognitionEvent;
+import ca.barraco.carlo.rhasspy.events.ShowReplyEvent;
+import ca.barraco.carlo.rhasspy.events.StartListeningEvent;
+import ca.barraco.carlo.rhasspy.R;
 
 public class ChatboxFragment extends Fragment {
     private LinearLayout chatLayout;
@@ -68,24 +71,27 @@ public class ChatboxFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleShowRecognitionResult(@NonNull ShowRecognitionEvent showRecognitionEvent) {
-        Logger.debug("Received message: %s", showRecognitionEvent.getMessage());
+        Logger.debug("Showing recognition result: %s", showRecognitionEvent.getMessage());
         currentRequestTextView.setText(showRecognitionEvent.getMessage());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleShowReply(@NonNull ShowReplyEvent showReplyEvent) {
-        Logger.debug("Received message: %s", showReplyEvent.getReply());
+        Logger.debug("Showing reply: %s", showReplyEvent.getReply());
         TextView replyTextView = createTextView(showReplyEvent.getReply());
         if (replyTextView == null) {
             return;
         }
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.START;
         params.topMargin = spToPixels(replyTextView.getContext(), 6);
         replyTextView.setLayoutParams(params);
-        replyTextView.setBackgroundColor(getResources().getColor(R.color.HomeAssistant));
-        replyTextView.setTextColor(getResources().getColor(R.color.White));
+        int colorSurface1 = SurfaceColors.SURFACE_1.getColor(this.getContext());
+        replyTextView.setBackgroundColor(colorSurface1);
+        replyTextView.setTextColor(Color.WHITE);
         replyTextView.setFocusable(true);
         replyTextView.setFocusableInTouchMode(true);
         chatLayout.addView(replyTextView);
@@ -95,10 +101,11 @@ public class ChatboxFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleShowError(ShowErrorEvent showErrorEvent) {
         if (currentRequestTextView != null) {
-            Logger.debug("Received message: %s", showErrorEvent.getMessage());
+            Logger.debug("Showing error: %s", showErrorEvent.getMessage());
             currentRequestTextView.setText(showErrorEvent.getMessage());
-            currentRequestTextView.setBackgroundColor(getResources().getColor(R.color.RecognitionFailure));
-            currentRequestTextView.setTextColor(getResources().getColor(R.color.White));
+            int colorSurface1 = SurfaceColors.SURFACE_1.getColor(getActivity());
+            currentRequestTextView.setBackgroundColor(colorSurface1);
+            currentRequestTextView.setTextColor(Color.WHITE);
         }
     }
 

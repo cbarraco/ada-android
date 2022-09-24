@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="24dp"
+        tools:layout="@layout/fragment_about"
         tools:context=".ui.AboutFragment">
 
         <TextView

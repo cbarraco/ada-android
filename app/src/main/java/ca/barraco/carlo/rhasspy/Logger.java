@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.rhasspy;
 
 import android.util.Log;
 
@@ -8,7 +8,7 @@ import java.util.Locale;
 
 @SuppressWarnings("unused")
 public class Logger {
-    private static final String TAG = "Ada";
+    private static final String TAG = "Rhasspy";
     public static final int RELATIVE_STACK_DEPTH = 4;
 
     private static boolean enabled = true;

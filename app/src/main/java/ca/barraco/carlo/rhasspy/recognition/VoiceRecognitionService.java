@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.recognition;
+package ca.barraco.carlo.rhasspy.recognition;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -18,9 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import ca.barraco.carlo.ada.Logger;
-import ca.barraco.carlo.ada.ui.MainActivity;
-import ca.barraco.carlo.ada.R;
+import ca.barraco.carlo.rhasspy.Logger;
+import ca.barraco.carlo.rhasspy.ui.MainActivity;
+import ca.barraco.carlo.rhasspy.R;
 
 public class VoiceRecognitionService extends Service {
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
@@ -31,11 +31,13 @@ public class VoiceRecognitionService extends Service {
     public int onStartCommand(@NonNull Intent intent, int flags, int startId) {
         Logger.debug("Received voice recognition request");
 
+        Logger.debug("Starting foreground service");
         Notification notification = buildNotification();
         startForeground(1, notification);
 
         // voice recognition must be done on main thread
         new Handler(Looper.getMainLooper()).post(() -> {
+            Logger.debug("Starting voice recognition");
             Context context = getApplicationContext();
             SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
             Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -63,7 +65,7 @@ public class VoiceRecognitionService extends Service {
         Context applicationContext = getApplicationContext();
         Intent notificationIntent = new Intent(applicationContext, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(applicationContext,
-                0, notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+                0, notificationIntent, PendingIntent.FLAG_ONE_SHOT|PendingIntent.FLAG_IMMUTABLE);
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Running in foreground")

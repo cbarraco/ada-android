@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.events;
+package ca.barraco.carlo.rhasspy.events;
 
 public class ShowRecognitionEvent {
     private final String message;

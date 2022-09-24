@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory app:title="@string/home_assistant_header">
         <EditTextPreference
-            android:summary="The web address to access Home Assistant\n\nExample: http://192.168.0.23:8123 or https://example.duckdns.org:8123"
+            android:summary="The web address to access Home Assistant"
             app:icon="@drawable/baseline_language_24dp"
             app:key="@string/home_assistant_url_key"
             app:title="@string/home_assistant_url_title" />

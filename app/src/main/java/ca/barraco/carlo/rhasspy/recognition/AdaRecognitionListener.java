@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.recognition;
+package ca.barraco.carlo.rhasspy.recognition;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,9 +17,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import ca.barraco.carlo.ada.ui.AdaActions;
-import ca.barraco.carlo.ada.Logger;
-import ca.barraco.carlo.ada.R;
+import ca.barraco.carlo.rhasspy.Actions;
+import ca.barraco.carlo.rhasspy.Logger;
+import ca.barraco.carlo.rhasspy.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -39,7 +39,7 @@ public class AdaRecognitionListener implements RecognitionListener {
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
-        AdaActions.startListening();
+        Actions.startListening();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class AdaRecognitionListener implements RecognitionListener {
     @Override
     public void onError(int i) {
         Logger.warning("Error encountered during recognition");
-        AdaActions.showError("I didn't hear anything");
+        Actions.showError("I didn't hear anything");
     }
 
     @Override
@@ -73,12 +73,13 @@ public class AdaRecognitionListener implements RecognitionListener {
         ArrayList<String> recognitionResults = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String speechRecognitionResult = recognitionResults.get(0);
         sendConversationText(speechRecognitionResult);
-        AdaActions.showRecognitionResult(speechRecognitionResult);
+        Actions.showRecognitionResult(speechRecognitionResult);
         Logger.information("Recognized speech: %s", speechRecognitionResult);
     }
 
     private void sendConversationText(String voiceRecognitionResult) {
         try {
+            Logger.debug("Sending voice recognition result to Rhasspy");
             Request request = buildRequest(voiceRecognitionResult);
             OkHttpClient okHttpClient = new OkHttpClient();
             Call call = okHttpClient.newCall(request);
@@ -98,7 +99,7 @@ public class AdaRecognitionListener implements RecognitionListener {
         if (!isValidUrl) {
             String message = "Home Assistant URL is not valid";
             Logger.warning(message);
-            AdaActions.showError(message);
+            Actions.showError(message);
             throw new IOException(message);
         }
 
@@ -107,7 +108,7 @@ public class AdaRecognitionListener implements RecognitionListener {
         String authorizationHeaderValue = "Bearer " + homeAssistantToken;
 
         MediaType requestMediaType = MediaType.get("application/json; charset=utf-8");
-        String requestJsonBody = "{\"text\":\"" + voiceRecognitionResult + "\", \"conversation_id\":\"ada\"}";
+        String requestJsonBody = "{\"text\":\"" + voiceRecognitionResult + "\", \"conversation_id\":\"rhasspy\"}";
         RequestBody requestBody = RequestBody.create(requestJsonBody, requestMediaType);
 
         return new Request.Builder()
@@ -134,7 +135,7 @@ public class AdaRecognitionListener implements RecognitionListener {
         ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String word = data.get(data.size() - 1);
         if (!word.isEmpty()) {
-            AdaActions.showPartialResult(word);
+            Actions.showPartialResult(word);
         }
     }
 
@@ -155,7 +156,7 @@ public class AdaRecognitionListener implements RecognitionListener {
             String reply = parseResponse(response);
             Logger.debug("Got " + response.code() + " reply from Home Assistant: " + reply);
 
-            AdaActions.showReply(reply);
+            Actions.showReply(reply);
         }
 
         @Nullable

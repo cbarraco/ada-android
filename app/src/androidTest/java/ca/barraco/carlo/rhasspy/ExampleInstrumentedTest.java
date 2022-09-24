@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada;
+package ca.barraco.carlo.rhasspy;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("ca.barraco.carlo.ada", appContext.getPackageName());
+        assertEquals("ca.barraco.carlo.rhasspy", appContext.getPackageName());
     }
 }

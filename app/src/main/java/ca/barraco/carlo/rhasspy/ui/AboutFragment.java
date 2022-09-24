@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.ui;
+package ca.barraco.carlo.rhasspy.ui;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import ca.barraco.carlo.ada.R;
+import ca.barraco.carlo.rhasspy.R;
 
 public class AboutFragment extends Fragment {
 

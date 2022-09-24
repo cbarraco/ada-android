@@ -1,4 +1,4 @@
-package ca.barraco.carlo.ada.recognition.voiceinteraction;
+package ca.barraco.carlo.rhasspy.recognition.voiceinteraction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,8 +6,8 @@ import android.service.voice.VoiceInteractionSession;
 
 import androidx.annotation.NonNull;
 
-import ca.barraco.carlo.ada.Logger;
-import ca.barraco.carlo.ada.ui.MainActivity;
+import ca.barraco.carlo.rhasspy.Logger;
+import ca.barraco.carlo.rhasspy.ui.MainActivity;
 
 public class AdaVoiceInteractionSession extends VoiceInteractionSession {
 
@@ -21,7 +21,7 @@ public class AdaVoiceInteractionSession extends VoiceInteractionSession {
         try {
             Logger.information("Starting MainActivity for handling assist");
             Intent intent = new Intent(getContext(), MainActivity.class)
-                    .setAction("ca.barraco.carlo.ada.MAIN")
+                    .setAction("ca.barraco.carlo.rhasspy.MAIN")
                     .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startVoiceActivity(intent);
         } catch (Exception exception) {
