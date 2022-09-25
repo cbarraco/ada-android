@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.elevation.SurfaceColors;
 
 import org.greenrobot.eventbus.EventBus;
@@ -57,12 +58,15 @@ public class ChatboxFragment extends Fragment {
         if (currentRequestTextView == null) {
             return;
         }
+        Context context = chatLayout.getContext();
+
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.END;
-        params.topMargin = spToPixels(chatLayout.getContext(), 6);
+        params.topMargin = spToPixels(context, 6);
         currentRequestTextView.setLayoutParams(params);
-        currentRequestTextView.setBackgroundColor(getResources().getColor(R.color.AdaRequest));
-        currentRequestTextView.setTextColor(getResources().getColor(R.color.Black));
+
+        currentRequestTextView.setBackgroundColor(MaterialColors.getColor(context, R.attr.colorPrimaryContainer, Color.BLUE));
+        currentRequestTextView.setTextColor(MaterialColors.getColor(context, R.attr.colorOnPrimaryContainer, Color.WHITE));
         currentRequestTextView.setFocusable(true);
         currentRequestTextView.setFocusableInTouchMode(true);
         chatLayout.addView(currentRequestTextView);
