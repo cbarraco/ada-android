@@ -25,7 +25,7 @@ import ca.barraco.carlo.rhasspy.R;
 public class VoiceRecognitionService extends Service {
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
 
-    private AdaRecognitionListener adaRecognitionListener;
+    private MyRecognitionListener myRecognitionListener;
 
     @Override
     public int onStartCommand(@NonNull Intent intent, int flags, int startId) {
@@ -42,8 +42,8 @@ public class VoiceRecognitionService extends Service {
             SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
             Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-            adaRecognitionListener = new AdaRecognitionListener(context);
-            speechRecognizer.setRecognitionListener(adaRecognitionListener);
+            myRecognitionListener = new MyRecognitionListener(context);
+            speechRecognizer.setRecognitionListener(myRecognitionListener);
             speechRecognizer.startListening(recognizerIntent);
         });
         return START_NOT_STICKY;

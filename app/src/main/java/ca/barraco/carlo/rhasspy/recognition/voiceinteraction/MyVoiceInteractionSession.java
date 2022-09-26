@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import ca.barraco.carlo.rhasspy.Logger;
 import ca.barraco.carlo.rhasspy.ui.MainActivity;
 
-public class AdaVoiceInteractionSession extends VoiceInteractionSession {
+public class MyVoiceInteractionSession extends VoiceInteractionSession {
 
-    public AdaVoiceInteractionSession(Context context) {
+    public MyVoiceInteractionSession(Context context) {
         super(context);
     }
 

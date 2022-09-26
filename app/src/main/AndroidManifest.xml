@@ -46,7 +46,7 @@
         </activity>
 
         <service
-            android:name=".recognition.voiceinteraction.AdaVoiceInteractionService"
+            android:name=".recognition.voiceinteraction.MyVoiceInteractionService"
             android:exported="true"
             android:permission="android.permission.BIND_VOICE_INTERACTION"
             android:process=":interactor">
@@ -59,7 +59,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".recognition.voiceinteraction.AdaVoiceInteractionSessionService"
+            android:name=".recognition.voiceinteraction.MyVoiceInteractionSessionService"
             android:permission="android.permission.BIND_VOICE_INTERACTION" />
         <service
             android:name=".recognition.VoiceRecognitionService"

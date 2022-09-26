@@ -11,9 +11,9 @@
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/chatboxFragment"
-        android:name="ca.barraco.carlo.rhasspy.ui.ChatboxFragment"
+        android:name="ca.barraco.carlo.rhasspy.ui.RecognitionFragment"
         android:label="ChatboxFragment"
-        tools:layout="@layout/fragment_chatbox">
+        tools:layout="@layout/recognition_fragment">
         <action
             android:id="@+id/action_chatboxFragment_to_aboutFragment"
             app:destination="@id/aboutFragment" />

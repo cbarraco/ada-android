@@ -6,28 +6,26 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import ca.barraco.carlo.rhasspy.Logger;
-import ca.barraco.carlo.rhasspy.R;
-import ca.barraco.carlo.rhasspy.databinding.ActivityMainBinding;
+import ca.barraco.carlo.rhasspy.databinding.MainActivityBinding;
 import ca.barraco.carlo.rhasspy.events.ShowErrorEvent;
+import ca.barraco.carlo.rhasspy.events.ShowPartialResultEvent;
 import ca.barraco.carlo.rhasspy.events.ShowRecognitionEvent;
 import ca.barraco.carlo.rhasspy.events.ShowReplyEvent;
+import ca.barraco.carlo.rhasspy.events.StartListeningEvent;
 import ca.barraco.carlo.rhasspy.recognition.VoiceRecognitionService;
 
 public class MainActivity extends AppCompatActivity {
-    private final SettingsFragment settingsFragment = new SettingsFragment();
-    private final AboutFragment aboutFragment = new AboutFragment();
-    private final ChatboxFragment chatboxFragment = new ChatboxFragment();
     private boolean fromAssistantButton;
+    private ca.barraco.carlo.rhasspy.databinding.MainActivityBinding binding;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -71,45 +69,13 @@ public class MainActivity extends AppCompatActivity {
             startListening();
         }
 
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = MainActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        binding.bottomAppBar.setOnMenuItemClickListener(item -> {
-            int id = item.getItemId();
-            FragmentManager supportFragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-
-            if (id == R.id.action_settings) {
-                Logger.information("Opening Settings from action bar");
-                fragmentTransaction
-                        .replace(R.id.mainFragmentContainer, settingsFragment, "SETTINGS")
-                        .commit();
-            } else if (id == R.id.action_about) {
-                Logger.debug("Opening About from action bar");
-                fragmentTransaction
-                        .replace(R.id.mainFragmentContainer, aboutFragment, "ABOUT")
-                        .commit();
-            }
-            return true;
-        });
-
-        binding.bottomAppBar.setNavigationOnClickListener(v -> {
-            Logger.information("Opening Home from action bar");
-            FragmentManager supportFragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-            fragmentTransaction
-                    .replace(R.id.mainFragmentContainer, chatboxFragment, "CHATBOX")
-                    .commit();
-        });
 
         if (fromAssistantButton) {
             binding.fab.setVisibility(View.GONE);
         } else {
-            binding.fab.setOnClickListener(view -> {
-                FragmentManager supportFragmentManager = getSupportFragmentManager();
-                supportFragmentManager.beginTransaction().replace(R.id.mainFragmentContainer, chatboxFragment).commit();
-                startListening();
-            });
+            binding.fab.setOnClickListener(view -> startListening());
         }
 
         EventBus.getDefault().register(this);
@@ -136,10 +102,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleShowRecognitionResult(ShowRecognitionEvent showRecognitionEvent) {
+    public void handleStartListeningEvent(StartListeningEvent event) {
+        binding.progressBar.setIndeterminate(true);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleShowRecognitionResult(@NonNull ShowRecognitionEvent showRecognitionEvent) {
+        Logger.information("Showing recognition result");
+        String message = showRecognitionEvent.getMessage();
+        binding.textView.setText(message);
         if (fromAssistantButton) {
             finish();
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handlePartialResult(@NonNull ShowPartialResultEvent showPartialResultEvent) {
+        Logger.information("Showing partial result");
+        String message = showPartialResultEvent.getMessage();
+        binding.textView.setText(message);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -152,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleShowError(ShowErrorEvent showErrorEvent) {
         if (fromAssistantButton) {
+            binding.progressBar.setIndeterminate(false);
             finish();
         }
     }
