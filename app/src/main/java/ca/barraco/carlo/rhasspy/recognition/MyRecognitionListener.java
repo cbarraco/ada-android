@@ -55,29 +55,39 @@ public class MyRecognitionListener implements RecognitionListener {
     public void onResults(@NonNull Bundle bundle) {
         ArrayList<String> recognitionResults = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String speechRecognitionResult = recognitionResults.get(0);
-        String capitalizedResult = capitalizeFirstWord(speechRecognitionResult);
 
-        // add question mark if the result is a question
-        String[] questionWords = {"who", "what", "when", "where", "why", "how"};
+        Logger.information("Speech recognition result: " + speechRecognitionResult);
+        String processedResult = capitalizeFirstWord(speechRecognitionResult);
+        processedResult = addQuestionMark(processedResult);
+        Actions.showRecognitionResult(processedResult);
+
+        Logger.debug("Processed recognition result: " + processedResult);
+    }
+
+    @NonNull
+    private static String addQuestionMark(String capitalizedResult) {
+        String[] questionWords = {
+                "who", "what", "when", "where", "why", "how", "is", "are", "do", "does", "did", "can", "could", "will", "would", "shall", "should", "may", "might", "must"
+        };
         for (String questionWord : questionWords) {
             if (capitalizedResult.toLowerCase().startsWith(questionWord)) {
-                capitalizedResult += "?";
-                break;
+                return capitalizedResult + "?";
             }
         }
-
-        Actions.showRecognitionResult(capitalizedResult);
-        Logger.information("Recognized speech: %s", speechRecognitionResult);
+        return capitalizedResult;
     }
 
     @Override
     public void onPartialResults(@NonNull Bundle bundle) {
         ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String partialResult = data.get(data.size() - 1);
-        if (!partialResult.isEmpty()) {
-            String capitalizedPartialResult = capitalizeFirstWord(partialResult);
-            Actions.showPartialResult(capitalizedPartialResult);
+        if (partialResult.isEmpty()) {
+            Logger.warning("Partial result is empty");
+            return;
         }
+        String capitalizedPartialResult = capitalizeFirstWord(partialResult);
+        Logger.debug("Partial result: " + capitalizedPartialResult);
+        Actions.showPartialResult(capitalizedPartialResult);
     }
 
     @NonNull

@@ -1,4 +1,4 @@
-package ca.barraco.carlo.rhasspy.events;
+package ca.barraco.carlo.rhasspy.events.recognition;
 
 public class ShowReplyEvent {
     private final String reply;

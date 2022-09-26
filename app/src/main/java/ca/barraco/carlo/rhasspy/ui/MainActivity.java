@@ -1,6 +1,7 @@
 package ca.barraco.carlo.rhasspy.ui;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -16,11 +17,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import ca.barraco.carlo.rhasspy.Logger;
 import ca.barraco.carlo.rhasspy.databinding.MainActivityBinding;
-import ca.barraco.carlo.rhasspy.events.ShowErrorEvent;
-import ca.barraco.carlo.rhasspy.events.ShowPartialResultEvent;
-import ca.barraco.carlo.rhasspy.events.ShowRecognitionEvent;
-import ca.barraco.carlo.rhasspy.events.ShowReplyEvent;
-import ca.barraco.carlo.rhasspy.events.StartListeningEvent;
+import ca.barraco.carlo.rhasspy.events.recognition.PartialRecognitionEvent;
+import ca.barraco.carlo.rhasspy.events.recognition.RecognitionErrorEvent;
+import ca.barraco.carlo.rhasspy.events.recognition.ShowReplyEvent;
+import ca.barraco.carlo.rhasspy.events.recognition.StartListeningEvent;
+import ca.barraco.carlo.rhasspy.events.recognition.SuccessfulRecognitionEvent;
 import ca.barraco.carlo.rhasspy.recognition.VoiceRecognitionService;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,19 +32,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
+        handleAssistantButtonIfPressed();
+    }
+
+    private void handleAssistantButtonIfPressed() {
+        Intent intent = getIntent();
         if (intent == null) {
-            Logger.warning("Intent for MainActivity is null");
+            Logger.debug("Intent for MainActivity is null");
             return;
         }
         String action = intent.getAction();
         if (action == null) {
-            Logger.information("Action for MainActivity intent is null");
+            Logger.debug("Action for MainActivity intent is null");
             return;
         }
 
         if (action.equals("android.intent.action.VOICE_COMMAND")) {
             Logger.information("Handling assistant button");
             fromAssistantButton = true;
+            binding.fab.setVisibility(View.GONE);
             startListening();
         }
     }
@@ -52,33 +59,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
-        if (intent == null) {
-            Logger.warning("Intent for MainActivity is null");
-            return;
-        }
-        String action = intent.getAction();
-        if (action == null) {
-            Logger.information("Action for MainActivity intent is null");
-            return;
-        }
-
-        if (action.equals("android.intent.action.VOICE_COMMAND")) {
-            Logger.information("Handling assistant button");
-            fromAssistantButton = true;
-            startListening();
-        }
+        handleAssistantButtonIfPressed();
 
         binding = MainActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (fromAssistantButton) {
-            binding.fab.setVisibility(View.GONE);
-        } else {
-            binding.fab.setOnClickListener(view -> startListening());
-        }
+        binding.fab.setOnClickListener(view -> startListening());
 
         EventBus.getDefault().register(this);
+
+        requestPermissions();
+    }
+
+    private void requestPermissions() {
+        int selfPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        if (selfPermission == PackageManager.PERMISSION_DENIED) {
+            String[] permissions = new String[]{Manifest.permission.RECORD_AUDIO};
+            requestPermissions(permissions, 1);
+        }
     }
 
     @Override
@@ -90,48 +88,45 @@ public class MainActivity extends AppCompatActivity {
     private void startListening() {
         Logger.information("Starting speech recognition");
 
-        int selfPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
-        if (selfPermission == PackageManager.PERMISSION_DENIED) {
-            String[] permissions = new String[]{Manifest.permission.RECORD_AUDIO};
-            requestPermissions(permissions, 1);
-        }
-
-        Intent serviceIntent = new Intent(getApplicationContext(), VoiceRecognitionService.class);
-        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+        Context applicationContext = getApplicationContext();
+        Intent serviceIntent = new Intent(applicationContext, VoiceRecognitionService.class);
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleStartListeningEvent(StartListeningEvent event) {
+    public void handleStartListeningEvent(@NonNull StartListeningEvent event) {
         binding.progressBar.setIndeterminate(true);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleShowRecognitionResult(@NonNull ShowRecognitionEvent showRecognitionEvent) {
+    public void handleShowRecognitionResult(@NonNull SuccessfulRecognitionEvent event) {
         Logger.information("Showing recognition result");
-        String message = showRecognitionEvent.getMessage();
+
+        String message = event.getResult();
         binding.textView.setText(message);
+
         if (fromAssistantButton) {
             finish();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handlePartialResult(@NonNull ShowPartialResultEvent showPartialResultEvent) {
+    public void handlePartialResult(@NonNull PartialRecognitionEvent event) {
         Logger.information("Showing partial result");
-        String message = showPartialResultEvent.getMessage();
+        String message = event.getResult();
         binding.textView.setText(message);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleShowReply(ShowReplyEvent showReplyEvent) {
+    public void handleShowReply(@NonNull ShowReplyEvent event) {
         if (fromAssistantButton) {
             finish();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleShowError(ShowErrorEvent showErrorEvent) {
+    public void handleShowError(@NonNull RecognitionErrorEvent event) {
+        binding.textView2.setText(event.getMessage());
         if (fromAssistantButton) {
             binding.progressBar.setIndeterminate(false);
             finish();

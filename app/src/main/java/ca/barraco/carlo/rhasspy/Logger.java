@@ -48,12 +48,12 @@ public class Logger {
         Log.e(TAG, finalMessage);
     }
 
-    public static void error(String message, Exception exception, Object... args) {
+    public static void error(String message, Throwable throwable, Object... args) {
         if (isDisabled()) {
             return;
         }
         String finalMessage = getFinalLogMessage(message, args);
-        Log.e(TAG, finalMessage, exception);
+        Log.e(TAG, finalMessage, throwable);
     }
 
     @NonNull
