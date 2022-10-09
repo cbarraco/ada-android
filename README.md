@@ -1,2 +1,2 @@
-# rhasspyAssistant-android
-Home Assistant's RhasspyAssistant implemented as an Android app
+# Rhasspy Assistant
+Rhasspy implemented as an Android app
