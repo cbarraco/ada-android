@@ -42,7 +42,7 @@ public class VoiceRecognitionService extends Service {
             SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
             Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-            myRecognitionListener = new MyRecognitionListener(context);
+            myRecognitionListener = new MyRecognitionListener();
             speechRecognizer.setRecognitionListener(myRecognitionListener);
             speechRecognizer.startListening(recognizerIntent);
         });

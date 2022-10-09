@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Contract;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import ca.barraco.carlo.rhasspy.Logger;
+
 public class RecognitionServiceTrampoline extends RecognitionService {
     public final ConcurrentMap<Callback, SpeechRecognizer> recognizerMap = new ConcurrentHashMap<>();
 
@@ -71,6 +73,8 @@ public class RecognitionServiceTrampoline extends RecognitionService {
         }
     }
 
+    @NonNull
+    @Contract("_ -> new")
     private RecognitionListener createRecognitionListener(RecognitionService.Callback callback) {
         return new RecognitionListener() {
             @Override
@@ -121,6 +125,7 @@ public class RecognitionServiceTrampoline extends RecognitionService {
                 try {
                     runnable.run();
                 } catch (RemoteException e) {
+                    Logger.error("Error calling callback", e);
                 }
             }
         };

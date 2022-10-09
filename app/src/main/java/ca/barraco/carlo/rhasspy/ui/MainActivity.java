@@ -103,7 +103,9 @@ public class MainActivity extends AppCompatActivity {
         Logger.information("Showing recognition result");
 
         String message = event.getResult();
-        binding.textView.setText(message);
+        binding.recognizedSpeechTextView.setText(message);
+
+        binding.progressBar.setIndeterminate(false);
 
         if (fromAssistantButton) {
             finish();
@@ -114,11 +116,12 @@ public class MainActivity extends AppCompatActivity {
     public void handlePartialResult(@NonNull PartialRecognitionEvent event) {
         Logger.information("Showing partial result");
         String message = event.getResult();
-        binding.textView.setText(message);
+        binding.recognizedSpeechTextView.setText(message);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleShowReply(@NonNull ShowReplyEvent event) {
+        Logger.information("Showing reply");
         if (fromAssistantButton) {
             finish();
         }
@@ -126,9 +129,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleShowError(@NonNull RecognitionErrorEvent event) {
-        binding.textView2.setText(event.getMessage());
+        Logger.information("Showing error");
+        binding.recognizedIntentTextView.setText(event.getMessage());
+        binding.progressBar.setIndeterminate(false);
         if (fromAssistantButton) {
-            binding.progressBar.setIndeterminate(false);
             finish();
         }
     }

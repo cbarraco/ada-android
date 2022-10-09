@@ -14,14 +14,12 @@ import ca.barraco.carlo.rhasspy.Logger;
 
 public class MyRecognitionListener implements RecognitionListener {
 
-    private final Context context;
-
-    public MyRecognitionListener(Context context) {
-        this.context = context;
+    public MyRecognitionListener() {
     }
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
+        Logger.debug("Ready for speech");
         Actions.startListening();
     }
 
@@ -79,13 +77,13 @@ public class MyRecognitionListener implements RecognitionListener {
 
     @Override
     public void onPartialResults(@NonNull Bundle bundle) {
-        ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        String partialResult = data.get(data.size() - 1);
-        if (partialResult.isEmpty()) {
+        ArrayList<String> allResults = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        String resultsSoFar = allResults.get(allResults.size() - 1);
+        if (resultsSoFar.isEmpty()) {
             Logger.warning("Partial result is empty");
             return;
         }
-        String capitalizedPartialResult = capitalizeFirstWord(partialResult);
+        String capitalizedPartialResult = capitalizeFirstWord(resultsSoFar);
         Logger.debug("Partial result: " + capitalizedPartialResult);
         Actions.showPartialResult(capitalizedPartialResult);
     }
