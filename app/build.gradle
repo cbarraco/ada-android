@@ -48,6 +48,9 @@ dependencies {
     // core third party libraries
     implementation "org.greenrobot:eventbus:3.3.1"
     implementation 'com.google.code.gson:gson:2.9.0'
+    implementation project(path: ':killerbee')
+    implementation project(path: ':killerbee')
+    implementation project(path: ':killerbee')
 
     // unit test libraries
     testImplementation 'junit:junit:4.13.2'
