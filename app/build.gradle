@@ -1,17 +1,16 @@
 plugins {
     id 'com.android.application'
-    id 'androidx.navigation.safeargs'
 }
 
 android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "ca.barraco.carlo.rhasspy"
+        applicationId "ca.barraco.carlo.ada"
         minSdk 23
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 10
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -30,27 +29,21 @@ android {
     buildFeatures {
         viewBinding true
     }
-    namespace 'ca.barraco.carlo.rhasspy'
+    namespace 'ca.barraco.carlo.ada'
 }
 
 dependencies {
-    // material design
+    // google libraries
     implementation 'com.google.android.material:material:1.6.1'
-
-    // google UI libraries
-    implementation "androidx.navigation:navigation-fragment:2.5.2"
-    implementation 'androidx.navigation:navigation-ui:2.5.2'
+    implementation 'androidx.navigation:navigation-ui:2.4.2'
     implementation 'androidx.preference:preference:1.2.0'
-    implementation "androidx.fragment:fragment:1.5.3"
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation "androidx.fragment:fragment:1.4.1"
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    // core third party libraries
+    // third party libraries
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
     implementation "org.greenrobot:eventbus:3.3.1"
-    implementation 'com.google.code.gson:gson:2.9.0'
-    implementation project(path: ':killerbee')
-    implementation project(path: ':killerbee')
-    implementation project(path: ':killerbee')
 
     // unit test libraries
     testImplementation 'junit:junit:4.13.2'
